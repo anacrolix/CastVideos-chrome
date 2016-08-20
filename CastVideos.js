@@ -753,6 +753,7 @@ CastPlayer.prototype.seekMedia = function(event) {
   this.currentMediaSession.seek(request,
     this.onSeekSuccess.bind(this, 'media seek done'),
     this.onError.bind(this));
+  this.castPlayerStateBeforeSeeking = this.castPlayerState;
   this.castPlayerState = PLAYER_STATE.SEEKING;
 
   this.updateDisplayMessage();
@@ -765,7 +766,7 @@ CastPlayer.prototype.seekMedia = function(event) {
  */
 CastPlayer.prototype.onSeekSuccess = function(info) {
   console.log(info);
-  this.castPlayerState = PLAYER_STATE.PLAYING;
+  this.castPlayerState = this.castPlayerStateBeforeSeeking;
   this.updateDisplayMessage();
   this.updateMediaControlUI();
 };
