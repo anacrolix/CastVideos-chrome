@@ -32,22 +32,22 @@ var MEDIA_SOURCE_URL = 'http://commondatastorage.googleapis.com/gtv-videos-bucke
 var PROGRESS_BAR_WIDTH = 600;
 
 /**
- * Constants of states for Chromecast device 
+ * Constants of states for Chromecast device
  **/
 var DEVICE_STATE = {
-  'IDLE' : 0, 
-  'ACTIVE' : 1, 
-  'WARNING' : 2, 
+  'IDLE' : 0,
+  'ACTIVE' : 1,
+  'WARNING' : 2,
   'ERROR' : 3,
 };
 
 /**
- * Constants of states for CastPlayer 
+ * Constants of states for CastPlayer
  **/
 var PLAYER_STATE = {
-  'IDLE' : 'IDLE', 
-  'LOADING' : 'LOADING', 
-  'LOADED' : 'LOADED', 
+  'IDLE' : 'IDLE',
+  'LOADING' : 'LOADING',
+  'LOADED' : 'LOADED',
   'PLAYING' : 'PLAYING',
   'PAUSED' : 'PAUSED',
   'STOPPED' : 'STOPPED',
@@ -58,12 +58,12 @@ var PLAYER_STATE = {
 /**
  * Cast player object
  * main variables:
- *  - deviceState for Cast mode: 
+ *  - deviceState for Cast mode:
  *    IDLE: Default state indicating that Cast extension is installed, but showing no current activity
  *    ACTIVE: Shown when Chrome has one or more local activities running on a receiver
  *    WARNING: Shown when the device is actively being used, but when one or more issues have occurred
- *    ERROR: Should not normally occur, but shown when there is a failure 
- *  - Cast player variables for controlling Cast mode media playback 
+ *    ERROR: Should not normally occur, but shown when there is a failure
+ *  - Cast player variables for controlling Cast mode media playback
  *  - Local player variables for controlling local mode media playbacks
  *  - Current media variables for transition between Cast and local modes
  */
@@ -107,7 +107,7 @@ var CastPlayer = function() {
   this.currentMediaDuration = -1;
   // @type {Timer} A timer for tracking progress of media
   this.timer = null;
-  // @type {Boolean} A boolean to stop timer update of progress when triggered by media status event 
+  // @type {Boolean} A boolean to stop timer update of progress when triggered by media status event
   this.progressFlag = true;
   // @type {Number} A number in milliseconds for minimal progress update
   this.timerStep = 1000;
@@ -120,7 +120,7 @@ var CastPlayer = function() {
 };
 
 /**
- * Initialize local media player 
+ * Initialize local media player
  */
 CastPlayer.prototype.initializeLocalPlayer = function() {
   this.localPlayer = document.getElementById('video_element');
@@ -128,10 +128,10 @@ CastPlayer.prototype.initializeLocalPlayer = function() {
 };
 
 /**
- * Initialize Cast media player 
+ * Initialize Cast media player
  * Initializes the API. Note that either successCallback and errorCallback will be
- * invoked once the API has finished initialization. The sessionListener and 
- * receiverListener may be invoked at any time afterwards, and possibly more than once. 
+ * invoked once the API has finished initialization. The sessionListener and
+ * receiverListener may be invoked at any time afterwards, and possibly more than once.
  */
 CastPlayer.prototype.initializeCastPlayer = function() {
 
@@ -163,7 +163,7 @@ CastPlayer.prototype.initializeCastPlayer = function() {
 };
 
 /**
- * Callback function for init success 
+ * Callback function for init success
  */
 CastPlayer.prototype.onInitSuccess = function() {
   console.log("init success");
@@ -171,7 +171,7 @@ CastPlayer.prototype.onInitSuccess = function() {
 };
 
 /**
- * Generic error callback function 
+ * Generic error callback function
  */
 CastPlayer.prototype.onError = function() {
   console.log("error");
@@ -182,7 +182,7 @@ CastPlayer.prototype.onError = function() {
  * This handles auto-join when a page is reloaded
  * When active session is detected, playback will automatically
  * join existing session and occur in Cast mode and media
- * status gets synced up with current media of the session 
+ * status gets synced up with current media of the session
  */
 CastPlayer.prototype.sessionListener = function(e) {
   this.session = e;
@@ -253,15 +253,15 @@ CastPlayer.prototype.sessionUpdateListener = function(isAlive) {
 
 /**
  * Select a media content
- * @param {Number} mediaIndex A number for media index 
+ * @param {Number} mediaIndex A number for media index
  */
 CastPlayer.prototype.selectMedia = function(mediaIndex) {
   console.log("media selected" + mediaIndex);
 
   this.currentMediaIndex = mediaIndex;
   // reset progress bar
-  var pi = document.getElementById("progress_indicator"); 
-  var p = document.getElementById("progress"); 
+  var pi = document.getElementById("progress_indicator");
+  var p = document.getElementById("progress");
 
   // reset currentMediaTime
   this.currentMediaTime = 0;
@@ -283,7 +283,7 @@ CastPlayer.prototype.selectMedia = function(mediaIndex) {
 /**
  * Requests that a receiver application session be created or joined. By default, the SessionRequest
  * passed to the API at initialization time is used; this may be overridden by passing a different
- * session request in opt_sessionRequest. 
+ * session request in opt_sessionRequest.
  */
 CastPlayer.prototype.launchApp = function() {
   console.log("launching app...");
@@ -296,7 +296,7 @@ CastPlayer.prototype.launchApp = function() {
 };
 
 /**
- * Callback function for request session success 
+ * Callback function for request session success
  * @param {Object} e A chrome.cast.Session object
  */
 CastPlayer.prototype.onRequestSessionSuccess = function(e) {
@@ -321,12 +321,12 @@ CastPlayer.prototype.onLaunchError = function() {
  */
 CastPlayer.prototype.stopApp = function() {
   this.session.stop(this.onStopAppSuccess.bind(this, 'Session stopped'),
-      this.onError.bind(this));    
+      this.onError.bind(this));
 
 };
 
 /**
- * Callback function for stop app success 
+ * Callback function for stop app success
  */
 CastPlayer.prototype.onStopAppSuccess = function(message) {
   console.log(message);
@@ -370,7 +370,7 @@ CastPlayer.prototype.loadMedia = function(mediaIndex) {
   }
   else {
     request.currentTime = 0;
-  } 
+  }
 
   this.castPlayerState = PLAYER_STATE.LOADING;
   this.session.loadMedia(request,
@@ -400,8 +400,8 @@ CastPlayer.prototype.onMediaDiscovered = function(how, mediaSession) {
   }
 
   if( how == 'activeSession' ) {
-    this.castPlayerState = this.session.media[0].playerState; 
-    this.currentMediaTime = this.session.media[0].currentTime; 
+    this.castPlayerState = this.session.media[0].playerState;
+    this.currentMediaTime = this.session.media[0].currentTime;
   }
 
   if( this.castPlayerState == PLAYER_STATE.PLAYING ) {
@@ -444,7 +444,7 @@ CastPlayer.prototype.onMediaDiscovered = function(how, mediaSession) {
 };
 
 /**
- * Callback function when media load returns error 
+ * Callback function when media load returns error
  */
 CastPlayer.prototype.onLoadMediaError = function(e) {
   console.log("media error");
@@ -471,7 +471,7 @@ CastPlayer.prototype.onMediaStatusUpdate = function(e) {
 
 /**
  * Helper function
- * Increment media current position by 1 second 
+ * Increment media current position by 1 second
  */
 CastPlayer.prototype.incrementMediaTime = function() {
   if( this.castPlayerState == PLAYER_STATE.PLAYING || this.localPlayerState == PLAYER_STATE.PLAYING ) {
@@ -493,7 +493,7 @@ CastPlayer.prototype.playMediaLocally = function() {
   var vi = document.getElementById('video_image')
   vi.style.display = 'none';
   this.localPlayer.style.display = 'block';
-  if( this.localPlayerState != PLAYER_STATE.PLAYING && this.localPlayerState != PLAYER_STATE.PAUSED ) { 
+  if( this.localPlayerState != PLAYER_STATE.PLAYING && this.localPlayerState != PLAYER_STATE.PAUSED ) {
     this.localPlayer.src = this.mediaContents[this.currentMediaIndex]['sources'][0];
     this.localPlayer.load();
   }
@@ -507,12 +507,12 @@ CastPlayer.prototype.playMediaLocally = function() {
 };
 
 /**
- * Callback when media is loaded in local player 
+ * Callback when media is loaded in local player
  */
 CastPlayer.prototype.onMediaLoadedLocally = function() {
   this.currentMediaDuration = this.localPlayer.duration;
   var duration = this.currentMediaDuration;
-      
+
   var hr = parseInt(duration/3600);
   duration -= hr * 3600;
   var min = parseInt(duration/60);
@@ -537,7 +537,7 @@ CastPlayer.prototype.onMediaLoadedLocally = function() {
 };
 
 /**
- * Play media in Cast mode 
+ * Play media in Cast mode
  */
 CastPlayer.prototype.playMedia = function() {
   if( !this.currentMediaSession ) {
@@ -545,11 +545,11 @@ CastPlayer.prototype.playMedia = function() {
     return;
   }
 
-  switch( this.castPlayerState ) 
+  switch( this.castPlayerState )
   {
     case PLAYER_STATE.LOADED:
     case PLAYER_STATE.PAUSED:
-      this.currentMediaSession.play(null, 
+      this.currentMediaSession.play(null,
         this.mediaCommandSuccessCallback.bind(this,"playing started for " + this.currentMediaSession.sessionId),
         this.onError.bind(this));
       this.currentMediaSession.addUpdateListener(this.onMediaStatusUpdate.bind(this));
@@ -572,7 +572,7 @@ CastPlayer.prototype.playMedia = function() {
 };
 
 /**
- * Pause media playback in Cast mode  
+ * Pause media playback in Cast mode
  */
 CastPlayer.prototype.pauseMedia = function() {
   if( !this.currentMediaSession ) {
@@ -592,7 +592,7 @@ CastPlayer.prototype.pauseMedia = function() {
 };
 
 /**
- * Pause media playback in local player 
+ * Pause media playback in local player
  */
 CastPlayer.prototype.pauseMediaLocally = function() {
   this.localPlayer.pause();
@@ -602,7 +602,7 @@ CastPlayer.prototype.pauseMediaLocally = function() {
 };
 
 /**
- * Stop media playback in either Cast or local mode  
+ * Stop media playback in either Cast or local mode
  */
 CastPlayer.prototype.stopMedia = function() {
   if( !this.currentMediaSession ) {
@@ -634,10 +634,10 @@ CastPlayer.prototype.stopMediaLocally = function() {
 
 /**
  * Set media volume in Cast mode
- * @param {Boolean} mute A boolean  
+ * @param {Boolean} mute A boolean
  */
 CastPlayer.prototype.setReceiverVolume = function(mute) {
-  var p = document.getElementById("audio_bg_level"); 
+  var p = document.getElementById("audio_bg_level");
   if( event.currentTarget.id == 'audio_bg_track' ) {
     var pos = 100 - parseInt(event.offsetY);
   }
@@ -681,7 +681,7 @@ CastPlayer.prototype.setReceiverVolume = function(mute) {
 };
 
 /**
- * Mute media function in either Cast or local mode 
+ * Mute media function in either Cast or local mode
  */
 CastPlayer.prototype.muteMedia = function() {
   if( this.audio == true ) {
@@ -705,19 +705,19 @@ CastPlayer.prototype.muteMedia = function() {
     else {
       this.localPlayer.muted = false;
     }
-  } 
+  }
   this.updateMediaControlUI();
 };
 
 
 /**
  * media seek function in either Cast or local mode
- * @param {Event} e An event object from seek 
+ * @param {Event} e An event object from seek
  */
 CastPlayer.prototype.seekMedia = function(event) {
   var pos = parseInt(event.offsetX);
-  var pi = document.getElementById("progress_indicator"); 
-  var p = document.getElementById("progress"); 
+  var pi = document.getElementById("progress_indicator");
+  var p = document.getElementById("progress");
   if( event.currentTarget.id == 'progress_indicator' ) {
     var curr = parseInt(this.currentMediaTime + this.currentMediaDuration * pos / PROGRESS_BAR_WIDTH);
     var pp = parseInt(pi.style.marginLeft) + pos;
@@ -735,7 +735,7 @@ CastPlayer.prototype.seekMedia = function(event) {
     this.localPlayer.play();
   }
 
-  if( this.localPlayerState == PLAYER_STATE.PLAYING || this.localPlayerState == PLAYER_STATE.PAUSED 
+  if( this.localPlayerState == PLAYER_STATE.PLAYING || this.localPlayerState == PLAYER_STATE.PAUSED
       || this.castPlayerState == PLAYER_STATE.PLAYING || this.castPlayerState == PLAYER_STATE.PAUSED ) {
     p.style.width = pw + 'px';
     pi.style.marginLeft = pp + 'px';
@@ -753,6 +753,7 @@ CastPlayer.prototype.seekMedia = function(event) {
   this.currentMediaSession.seek(request,
     this.onSeekSuccess.bind(this, 'media seek done'),
     this.onError.bind(this));
+  this.castPlayerStateBeforeSeeking = this.castPlayerState;
   this.castPlayerState = PLAYER_STATE.SEEKING;
 
   this.updateDisplayMessage();
@@ -765,13 +766,13 @@ CastPlayer.prototype.seekMedia = function(event) {
  */
 CastPlayer.prototype.onSeekSuccess = function(info) {
   console.log(info);
-  this.castPlayerState = PLAYER_STATE.PLAYING;
+  this.castPlayerState = this.castPlayerStateBeforeSeeking;
   this.updateDisplayMessage();
   this.updateMediaControlUI();
 };
 
 /**
- * Callback function for media command success 
+ * Callback function for media command success
  */
 CastPlayer.prototype.mediaCommandSuccessCallback = function(info, e) {
   console.log(info);
@@ -779,11 +780,11 @@ CastPlayer.prototype.mediaCommandSuccessCallback = function(info, e) {
 
 /**
  * Update progress bar when there is a media status update
- * @param {Object} e An media status update object 
+ * @param {Object} e An media status update object
  */
 CastPlayer.prototype.updateProgressBar = function(e) {
-  var p = document.getElementById("progress"); 
-  var pi = document.getElementById("progress_indicator"); 
+  var p = document.getElementById("progress");
+  var pi = document.getElementById("progress_indicator");
   if( e == false ) {
     p.style.width = '0px';
     pi.style.marginLeft = -21 - PROGRESS_BAR_WIDTH + 'px';
@@ -792,7 +793,7 @@ CastPlayer.prototype.updateProgressBar = function(e) {
     this.updateDisplayMessage();
   } else {
     p.style.width = Math.ceil(PROGRESS_BAR_WIDTH * this.currentMediaSession.currentTime / this.currentMediaSession.media.duration + 1) + 'px';
-    this.progressFlag = false; 
+    this.progressFlag = false;
     setTimeout(this.setProgressFlag.bind(this),1000); // don't update progress in 1 second
     var pp = Math.ceil(PROGRESS_BAR_WIDTH * this.currentMediaSession.currentTime / this.currentMediaSession.media.duration);
     pi.style.marginLeft = -21 - PROGRESS_BAR_WIDTH + pp + 'px';
@@ -801,28 +802,28 @@ CastPlayer.prototype.updateProgressBar = function(e) {
 
 /**
  * Set progressFlag with a timeout of 1 second to avoid UI update
- * until a media status update from receiver 
+ * until a media status update from receiver
  */
 CastPlayer.prototype.setProgressFlag = function() {
   this.progressFlag = true;
 };
 
 /**
- * Update progress bar based on timer  
+ * Update progress bar based on timer
  */
 CastPlayer.prototype.updateProgressBarByTimer = function() {
-  var p = document.getElementById("progress"); 
+  var p = document.getElementById("progress");
   if( isNaN(parseInt(p.style.width)) ) {
     p.style.width = 0;
-  } 
+  }
   if( this.currentMediaDuration > 0 ) {
     var pp = Math.floor(PROGRESS_BAR_WIDTH * this.currentMediaTime/this.currentMediaDuration);
   }
-    
-  if( this.progressFlag ) { 
+
+  if( this.progressFlag ) {
     // don't update progress if it's been updated on media status update event
-    p.style.width = pp + 'px'; 
-    var pi = document.getElementById("progress_indicator"); 
+    p.style.width = pp + 'px';
+    var pi = document.getElementById("progress_indicator");
     pi.style.marginLeft = -21 - PROGRESS_BAR_WIDTH + pp + 'px';
   }
 
@@ -836,7 +837,7 @@ CastPlayer.prototype.updateProgressBarByTimer = function() {
 };
 
 /**
- * Update display message depending on cast mode by deviceState 
+ * Update display message depending on cast mode by deviceState
  */
 CastPlayer.prototype.updateDisplayMessage = function() {
   if( this.deviceState != DEVICE_STATE.ACTIVE || this.castPlayerState == PLAYER_STATE.IDLE || this.castPlayerState == PLAYER_STATE.STOPPED ) {
@@ -849,7 +850,7 @@ CastPlayer.prototype.updateDisplayMessage = function() {
     document.getElementById("playerstate").style.display = 'block';
     document.getElementById("playerstatebg").style.display = 'block';
     document.getElementById("video_image_overlay").style.display = 'block';
-    document.getElementById("playerstate").innerHTML = 
+    document.getElementById("playerstate").innerHTML =
       this.mediaContents[this.currentMediaIndex]['title'] + " "
       + this.castPlayerState + " on " + this.session.receiver.friendlyName;
   }
@@ -897,7 +898,7 @@ CastPlayer.prototype.updateMediaControlUI = function() {
 }
 
 /**
- * Update UI components after selectMedia call 
+ * Update UI components after selectMedia call
  * @param {Number} mediaIndex An number
  */
 CastPlayer.prototype.selectMediaUpdateUI = function(mediaIndex) {
@@ -909,10 +910,10 @@ CastPlayer.prototype.selectMediaUpdateUI = function(mediaIndex) {
 };
 
 /**
- * Initialize UI components and add event listeners 
+ * Initialize UI components and add event listeners
  */
 CastPlayer.prototype.initializeUI = function() {
-  // set initial values for title, subtitle, and description 
+  // set initial values for title, subtitle, and description
   document.getElementById("media_title").innerHTML = this.mediaContents[0]['title'];
   document.getElementById("media_subtitle").innerHTML = this.mediaContents[this.currentMediaIndex]['subtitle'];
   document.getElementById("media_desc").innerHTML = this.mediaContents[this.currentMediaIndex]['description'];
@@ -937,7 +938,7 @@ CastPlayer.prototype.initializeUI = function() {
   document.getElementById("media_control").addEventListener('mouseout', this.hideMediaControl.bind(this));
   document.getElementById("fullscreen_expand").addEventListener('click', this.requestFullScreen.bind(this));
   document.getElementById("fullscreen_collapse").addEventListener('click', this.cancelFullScreen.bind(this));
-  document.addEventListener("fullscreenchange", this.changeHandler.bind(this), false);      
+  document.addEventListener("fullscreenchange", this.changeHandler.bind(this), false);
   document.addEventListener("webkitfullscreenchange", this.changeHandler.bind(this), false);
 
   // enable play/pause buttons
@@ -948,18 +949,18 @@ CastPlayer.prototype.initializeUI = function() {
 };
 
 /**
- * Show the media control 
+ * Show the media control
  */
 CastPlayer.prototype.showMediaControl = function() {
   document.getElementById('media_control').style.opacity = 0.7;
-};    
+};
 
 /**
- * Hide the media control  
+ * Hide the media control
  */
 CastPlayer.prototype.hideMediaControl = function() {
   document.getElementById('media_control').style.opacity = 0;
-};    
+};
 
 /**
  * Show the volume slider
@@ -969,20 +970,20 @@ CastPlayer.prototype.showVolumeSlider = function() {
   document.getElementById('audio_bg_track').style.opacity = 1;
   document.getElementById('audio_bg_level').style.opacity = 1;
   document.getElementById('audio_indicator').style.opacity = 1;
-};    
+};
 
 /**
- * Hide the volume slider 
+ * Hide the volume slider
  */
 CastPlayer.prototype.hideVolumeSlider = function() {
   document.getElementById('audio_bg').style.opacity = 0;
   document.getElementById('audio_bg_track').style.opacity = 0;
   document.getElementById('audio_bg_level').style.opacity = 0;
   document.getElementById('audio_indicator').style.opacity = 0;
-};    
+};
 
 /**
- * Request full screen mode 
+ * Request full screen mode
  */
 CastPlayer.prototype.requestFullScreen = function() {
   // Supports most browsers and their versions.
@@ -996,19 +997,19 @@ CastPlayer.prototype.requestFullScreen = function() {
 };
 
 /**
- * Exit full screen mode 
+ * Exit full screen mode
  */
 CastPlayer.prototype.cancelFullScreen = function() {
   // Supports most browsers and their versions.
   var requestMethod = document.cancelFullScreen || document.webkitCancelFullScreen;
 
-  if (requestMethod) { 
+  if (requestMethod) {
     requestMethod.call(document);
-  } 
+  }
 };
 
 /**
- * Exit fullscreen mode by escape 
+ * Exit fullscreen mode by escape
  */
 CastPlayer.prototype.changeHandler = function(){
   this.fullscreen = !this.fullscreen;
@@ -1043,7 +1044,7 @@ CastPlayer.prototype.hideFullscreenButton = function(){
 };
 
 /**
- * @param {function} A callback function for the function to start timer 
+ * @param {function} A callback function for the function to start timer
  */
 CastPlayer.prototype.startProgressTimer = function(callback) {
   if( this.timer ) {
@@ -1098,7 +1099,7 @@ CastPlayer.prototype.onMediaJsonError = function() {
 }
 
 /**
- * Add video thumbnails div's to UI for media JSON contents 
+ * Add video thumbnails div's to UI for media JSON contents
  */
 CastPlayer.prototype.addVideoThumbs = function() {
   this.mediaContents = mediaJSON['categories'][0]['videos'];
@@ -1121,7 +1122,7 @@ CastPlayer.prototype.addVideoThumbs = function() {
  * hardcoded media json objects
  */
 var mediaJSON = { "categories" : [ { "name" : "Movies",
-        "videos" : [ 
+        "videos" : [
 		    { "description" : "Big Buck Bunny tells the story of a giant rabbit with a heart bigger than himself. When one sunny day three rodents rudely harass him, something snaps... and the rabbit ain't no bunny anymore! In the typical cartoon tradition he prepares the nasty rodents a comical revenge.\n\nLicensed under the Creative Commons Attribution license\nhttp://www.bigbuckbunny.org",
               "sources" : [ "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" ],
               "subtitle" : "By Blender Foundation",
@@ -1158,7 +1159,7 @@ var mediaJSON = { "categories" : [ { "name" : "Movies",
               "thumb" : "images/ForBiggerJoyrides.jpg",
               "title" : "For Bigger Joyrides"
             },
-            { "description" :"Introducing Chromecast. The easiest way to enjoy online video and music on your TV. For when you want to make Buster's big meltdowns even bigger. For $35. Learn how to use Chromecast with Netflix and more at google.com/chromecast.", 
+            { "description" :"Introducing Chromecast. The easiest way to enjoy online video and music on your TV. For when you want to make Buster's big meltdowns even bigger. For $35. Learn how to use Chromecast with Netflix and more at google.com/chromecast.",
               "sources" : [ "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" ],
               "subtitle" : "By Google",
               "thumb" : "images/ForBiggerMeltdowns.jpg",
@@ -1176,7 +1177,7 @@ var mediaJSON = { "categories" : [ { "name" : "Movies",
               "thumb" : "images/SubaruOutbackOnStreetAndDirt.jpg",
               "title" : "Subaru Outback On Street And Dirt"
             },
-			{ "description" : "Tears of Steel was realized with crowd-funding by users of the open source 3D creation tool Blender. Target was to improve and test a complete open and free pipeline for visual effects in film - and to make a compelling sci-fi film in Amsterdam, the Netherlands.  The film itself, and all raw material used for making it, have been released under the Creatieve Commons 3.0 Attribution license. Visit the tearsofsteel.org website to find out more about this, or to purchase the 4-DVD box with a lot of extras.  (CC) Blender Foundation - http://www.tearsofsteel.org", 
+			{ "description" : "Tears of Steel was realized with crowd-funding by users of the open source 3D creation tool Blender. Target was to improve and test a complete open and free pipeline for visual effects in film - and to make a compelling sci-fi film in Amsterdam, the Netherlands.  The film itself, and all raw material used for making it, have been released under the Creatieve Commons 3.0 Attribution license. Visit the tearsofsteel.org website to find out more about this, or to purchase the 4-DVD box with a lot of extras.  (CC) Blender Foundation - http://www.tearsofsteel.org",
               "sources" : [ "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" ],
               "subtitle" : "By Blender Foundation",
               "thumb" : "images/TearsOfSteel.jpg",
